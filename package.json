@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/scottgarner/khoros-middleware#readme",
   "dependencies": {
-    "khoros-client": "git+https://github.com/scottgarner/khoros-client.git"
+    "khoros-client": "git+https://github.com/scottgarner/khoros-client.git",
+    "socket.io": "^1.4.6"
   }
 }
