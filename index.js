@@ -1,13 +1,21 @@
-module.exports = function (io) {
+module.exports = function (server) {
+
+	// Serve client js.
+	// TODO: Read this in a better way.
+
+	var fs = require("fs");
+	var clientJS = fs.readFileSync("../khoros-client/khoros.js");
+
+	server.on('request', function(req, res) {
+		if (req.url == "/khoros/khoros.js") {
+  			res.writeHead(200, {"Content-Type": "text/plain"});
+  			res.end(clientJS);
+		}
+	});
+
+	// Return middleware.
 
 	return function (socket, next) {
-		
-		// Add client to a room based on querystring
-
-		var room = socket.handshake['query']['room'];
-		if (room) socket.join(room);
-
-		// React to all events
 
 		socket.onevent = function (packet) {
 			if(packet.type == 2) {
@@ -15,10 +23,15 @@ module.exports = function (io) {
 				var type = packet.data[0];
 				var data = packet.data[1];
 
-				if (!data.clientID) data.clientID = socket.client.id;
-
-				if (data.room) {
-					io.to(data.room).emit(type, data);
+				switch(type) {
+					case "khoros.join":
+						console.log("New listener in room: " + data.khoros.room);
+						socket.join(data.khoros.room);
+					break;
+					default:
+						data.khoros.clientID = socket.client.id;
+						socket.broadcast.to(data.khoros.room).emit(type, data);
+						break;
 				}
 
 			}
