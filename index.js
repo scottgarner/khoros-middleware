@@ -1,17 +1,20 @@
+var read = require('fs').readFileSync;
+var client = require('khoros-client');
+
 module.exports = function (server) {
 
 	// Serve client js.
-	// TODO: Read this in a better way.
 
-	var fs = require("fs");
-	var clientJS = fs.readFileSync("../khoros-client/khoros.js");
+	if (server) {
+		var clientSource = read(require.resolve('khoros-client/khoros.js'), 'utf-8');
 
-	server.on('request', function(req, res) {
-		if (req.url == "/khoros/khoros.js") {
-  			res.writeHead(200, {"Content-Type": "text/plain"});
-  			res.end(clientJS);
-		}
-	});
+		server.on('request', function(req, res) {
+			if (req.url == "/khoros/khoros.js") {
+				res.writeHead(200, {"Content-Type": "text/plain"});
+				res.end(clientSource);
+			}
+		});
+	}
 
 	// Return middleware.
 
