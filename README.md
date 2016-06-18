@@ -1,6 +1,6 @@
-# Khoros Javascript Client
+# Khoros Socket.io Middleware
 
-JS client for [Khoros](http://github.com/scottgarner/khoros).
+Socket.io middleware for [Khoros](http://github.com/scottgarner/khoros).
 
 ### Usage
 
@@ -11,7 +11,7 @@ var io = require('socket.io')(server);
 
 // Khoros
  
-var khoros = require('khoros-middleware')(server);
+var khoros = require('khoros-middleware')(io, server);
 io.use(khoros);
 ```
 
