@@ -9,6 +9,7 @@ module.exports = function (io, server) {
 		var clientSource = read(require.resolve('khoros-client/khoros.js'), 'utf-8');
 
 		server.on('request', function(req, res) {
+			console.log(req.url);
 			if (req.url == "/khoros/khoros.js") {
 				res.writeHead(200, {"Content-Type": "text/plain"});
 				res.end(clientSource);
