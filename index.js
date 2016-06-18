@@ -1,7 +1,7 @@
 var read = require('fs').readFileSync;
 var client = require('khoros-client');
 
-module.exports = function (server) {
+module.exports = function (io, server) {
 
 	// Serve client js.
 
@@ -33,7 +33,13 @@ module.exports = function (server) {
 					break;
 					default:
 						data.khoros.clientID = socket.client.id;
-						socket.broadcast.to(data.khoros.room).emit(type, data);
+						if (data.khoros.echo) {
+							// Send to all including sender
+							io.in(data.khoros.room).emit(type, data);
+						} else {
+							// Send to all except sender
+							socket.broadcast.to(data.khoros.room).emit(type, data);
+						}
 						break;
 				}
 
